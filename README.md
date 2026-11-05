@@ -1,4 +1,4 @@
-# 🛸 Crónicas de un Disociado en San Pedro
+﻿# 🛸 Crónicas de un Disociado en San Pedro
 
 Web cómic animado de la rutina de stand-up de **Genio Maluco**.
 
@@ -6,7 +6,7 @@ Un treintañero sale a la hora del almuerzo en San Pedro de Montes de Oca, se di
 
 ## ▶️ Ver el cómic
 
-👉 **https://TU-USUARIO.github.io/cronicas-disociado/**
+👉 **https://geniomaluco.github.io/cronicas-disociado/**
 
 ## 🎮 Controles
 
