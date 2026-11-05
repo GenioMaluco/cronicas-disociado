@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crónicas de un Disociado en San Pedro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<style>
+  :root { --ink:#111; --paper:#fff8e7; --pop:#ffcc00; --hot:#ff3b3b; --cool:#2ec4ff; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html,body { height:100%; background:#0d0d12; color:var(--ink); font-family:'Comic Neue', 'Comic Sans MS', sans-serif; overflow:hidden; }
+  .deck { position:relative; width:100vw; height:100vh; }
+  .slide { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity .6s ease, transform .6s ease; transform:scale(1.03); overflow:hidden; }
+  .slide.active { opacity:1; pointer-events:auto; transform:scale(1); }
+
+  /* ---- Viñeta con imagen ---- */
+  .panel { position:relative; width:min(92vw, 160vh); aspect-ratio:16/9; border:6px solid var(--ink); border-radius:6px; box-shadow:10px 10px 0 var(--pop); background:#333 center/cover no-repeat; overflow:hidden; }
+  .panel img { width:100%; height:100%; object-fit:cover; display:block; }
+  .panel.noimg { background:linear-gradient(135deg,#ff9a3c,#ff3b3b 50%,#6a2c91); }
+  .panel.noimg img { display:none; }
+  .panel.noimg::after { content:attr(data-fallback); position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-family:'Bangers'; font-size:6vh; color:#fff; text-shadow:3px 3px 0 #000; text-align:center; padding:2em; }
+  .active .panel img { animation:kenburns 14s ease-out forwards; }
+  @keyframes kenburns { from { transform:scale(1); } to { transform:scale(1.08); } }
+
+  /* ---- Globos y cartelas ---- */
+  .caption { position:absolute; background:var(--pop); border:4px solid var(--ink); padding:.5em .9em; font-family:'Bangers'; letter-spacing:1px; font-size:clamp(16px,3.2vh,34px); box-shadow:5px 5px 0 var(--ink); max-width:45%; z-index:3; }
+  .caption.tl { top:4%; left:3%; } .caption.br { bottom:4%; right:3%; } .caption.tr { top:4%; right:3%; } .caption.bl { bottom:4%; left:3%; }
+  .bubble { position:absolute; background:#fff; border:4px solid var(--ink); border-radius:28px; padding:.6em 1em; font-weight:700; font-size:clamp(14px,2.6vh,28px); max-width:42%; z-index:3; box-shadow:4px 4px 0 rgba(0,0,0,.4); }
+  .bubble::after { content:""; position:absolute; bottom:-22px; left:30px; border:12px solid transparent; border-top:18px solid var(--ink); }
+  .bubble.shout { background:var(--hot); color:#fff; font-family:'Bangers'; font-size:clamp(18px,3.4vh,38px); border-radius:6px; transform:rotate(-2deg); }
+  .pop-in { opacity:0; }
+  .active .pop-in { animation:popin .5s cubic-bezier(.2,1.6,.4,1) forwards; }
+  .active .d1 { animation-delay:.6s; } .active .d2 { animation-delay:1.6s; } .active .d3 { animation-delay:2.8s; } .active .d4 { animation-delay:4s; }
+  @keyframes popin { from { opacity:0; transform:scale(.3) rotate(-6deg); } to { opacity:1; transform:scale(1) rotate(0); } }
+
+  /* ---- Escenas CSS ---- */
+  .scene { width:min(92vw,160vh); aspect-ratio:16/9; border:6px solid var(--ink); border-radius:6px; box-shadow:10px 10px 0 var(--pop); position:relative; overflow:hidden; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:3%; }
+  .big { font-family:'Bangers'; font-size:clamp(36px,10vh,120px); line-height:1; letter-spacing:2px; text-shadow:5px 5px 0 var(--ink); color:#fff; -webkit-text-stroke:2px var(--ink); }
+  .sub { font-weight:700; font-size:clamp(16px,3vh,32px); margin-top:.6em; }
+
+  /* Portada */
+  .cover { background:repeating-conic-gradient(from 0deg at 50% 60%, #ffcc00 0 10deg, #ff9f1c 10deg 20deg); }
+  .cover .big { color:#fff; font-size:clamp(40px,11vh,130px); transform:rotate(-3deg); }
+  .cover .tag { margin-top:1em; background:#fff; border:4px solid var(--ink); padding:.4em 1em; font-family:'Bangers'; font-size:clamp(18px,3.5vh,40px); box-shadow:5px 5px 0 var(--ink); transform:rotate(2deg); }
+  .ufo-mini { font-size:12vh; animation:float 3s ease-in-out infinite; }
+  @keyframes float { 50% { transform:translateY(-14px) rotate(4deg); } }
+
+  /* Grito */
+  .shout-scene { background:radial-gradient(circle, #ff6b6b, #8b0000); }
+  .active .shout-scene .big { animation:shake .12s infinite; }
+  @keyframes shake { 0%{transform:translate(0,0)} 25%{transform:translate(-4px,3px)} 50%{transform:translate(4px,-3px)} 75%{transform:translate(-3px,-2px)} }
+  .flag { font-size:9vh; margin-top:.2em; }
+
+  /* SINPE */
+  .sinpe-scene { background:linear-gradient(160deg,#1b2a4a,#0a1020); color:#fff; flex-direction:row; gap:6%; }
+  .phone { width:22%; aspect-ratio:9/18; background:#111; border:5px solid #555; border-radius:28px; padding:6% 1.5%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.6em; box-shadow:0 0 40px rgba(46,196,255,.4); }
+  .phone .bank { font-weight:700; font-size:2.2vh; color:var(--cool); }
+  .phone .amt { font-family:'Bangers'; font-size:6vh; color:#7CFC00; }
+  .phone .err { font-size:1.8vh; color:#ff8080; }
+  .tejas { font-family:'Bangers'; font-size:clamp(40px,14vh,160px); color:var(--pop); text-shadow:6px 6px 0 #000; }
+  .active .tejas { animation:glitch 1.2s steps(2) infinite; }
+  @keyframes glitch { 0%{text-shadow:6px 6px 0 #000} 50%{text-shadow:-6px 4px 0 var(--hot), 6px -4px 0 var(--cool)} }
+
+  /* Barra de vida */
+  .hp-scene { background:#1a0f2e; color:#fff; font-family:'VT323', monospace; }
+  .hp-label { font-size:clamp(24px,6vh,64px); }
+  .hp-bar { width:70%; height:8vh; border:5px solid #fff; margin:3vh 0; background:#300; position:relative; }
+  .hp-fill { height:100%; width:3%; background:linear-gradient(90deg,#ff3b3b,#ffcc00,#3bff6b); }
+  .active .hp-fill { animation:fillhp 3.5s 0.6s ease-out forwards; }
+  @keyframes fillhp { to { width:100%; } }
+  .hp-scene .big { color:var(--pop); font-family:'Bangers'; }
+
+  /* Bucle de la quincena */
+  .loop-scene { background:var(--paper); }
+  .week { display:grid; grid-template-columns:repeat(7,1fr); gap:1.2%; width:100%; margin-top:2%; }
+  .day { background:#fff; border:4px solid var(--ink); padding:6% 4%; border-radius:8px; font-size:clamp(11px,1.9vh,22px); min-height:28vh; text-align:left; box-shadow:4px 4px 0 var(--ink); }
+  .day b { display:block; font-family:'Bangers'; font-size:clamp(16px,3vh,34px); margin-bottom:.4em; text-align:center; }
+  .active .day { animation:hl 7s infinite; }
+  .active .day:nth-child(1){animation-delay:0s} .active .day:nth-child(2){animation-delay:1s} .active .day:nth-child(3){animation-delay:2s} .active .day:nth-child(4){animation-delay:3s} .active .day:nth-child(5){animation-delay:4s} .active .day:nth-child(6){animation-delay:5s} .active .day:nth-child(7){animation-delay:6s}
+  @keyframes hl { 0%,12% { background:var(--pop); transform:translateY(-10px); } 14%,100% { background:#fff; transform:none; } }
+  .loop-scene .big { font-size:clamp(28px,7vh,80px); color:var(--hot); }
+
+  /* Telescopio */
+  .scope-scene { background:#000; }
+  .lens { width:55vh; height:55vh; max-width:60%; border-radius:50%; border:12px solid #333; background:radial-gradient(circle at 50% 70%, #3a7d2c 0 30%, #87ceeb 31%); position:relative; box-shadow:0 0 0 100vmax #000; display:flex; align-items:center; justify-content:center; font-size:8vh; }
+  .active .lens { animation:pan 5s ease-in-out infinite alternate; }
+  @keyframes pan { to { transform:translateX(30px); } }
+  .scope-scene .sub { position:absolute; bottom:6%; color:#fff; }
+  .rh { position:absolute; top:6%; background:var(--hot); color:#fff; font-family:'Bangers'; padding:.3em .8em; border:4px solid #fff; font-size:clamp(18px,4vh,44px); transform:rotate(-4deg); z-index:2; }
+
+  /* Reinicio Windows */
+  .bsod { background:#0078d7; color:#fff; align-items:flex-start; text-align:left; padding:6% 8%; font-family:'Segoe UI', sans-serif; }
+  .bsod .sad { font-size:14vh; line-height:1; }
+  .bsod h2 { font-weight:300; font-size:clamp(18px,4vh,44px); margin:3vh 0; }
+  .bsod p { font-size:clamp(13px,2.4vh,26px); opacity:.9; }
+  .pct::after { content:"0%"; }
+  .active .pct::after { animation:pct 4s steps(1) forwards; }
+  @keyframes pct { 0%{content:"0%"} 25%{content:"27%"} 50%{content:"64%"} 75%{content:"98%"} 100%{content:"100% — Bienvenido a la realidad"} }
+
+  /* Poema */
+  .poem-scene { background:#1e1e1e; color:#d4d4d4; font-family:'VT323', monospace; align-items:flex-start; text-align:left; padding:3% 5%; }
+  .poem-scene .bar { position:absolute; top:0; left:0; right:0; background:#333; padding:.4em 1em; font-size:2.4vh; display:flex; justify-content:space-between; }
+  .poem-lines { margin-top:5vh; font-size:clamp(16px,3.2vh,36px); line-height:1.35; }
+  .poem-lines div { opacity:0; }
+  .active .poem-lines div { animation:typein .4s forwards; }
+  @keyframes typein { to { opacity:1; } }
+  .clock { color:var(--hot); font-weight:bold; }
+
+  /* Final */
+  .end-scene { background:repeating-linear-gradient(45deg,#ffcc00 0 40px,#ffdd33 40px 80px); }
+  .end-scene .moral { background:#fff; border:5px solid var(--ink); padding:1em 1.4em; font-weight:700; font-size:clamp(16px,3vh,32px); max-width:80%; box-shadow:6px 6px 0 var(--ink); margin-top:2vh; }
+  .end-scene .sign { font-family:'Bangers'; font-size:clamp(24px,5vh,56px); margin-top:3vh; color:var(--hot); text-shadow:3px 3px 0 #000; }
+
+  /* ---- Viñetas secuenciales de diálogo ---- */
+  .slide.has-beats .caption:not(.b), .slide.has-beats .bubble:not(.b) { display:none !important; }
+  .beats { position:absolute; inset:0; z-index:10; pointer-events:none; }
+  .b { position:absolute; max-width:46%; padding:.55em .95em; border:4px solid var(--ink); font-size:clamp(14px,2.7vh,30px); line-height:1.25; text-align:left; color:var(--ink); box-shadow:5px 5px 0 rgba(0,0,0,.55); animation:bpop .45s cubic-bezier(.2,1.6,.4,1) both; }
+  .b:nth-child(2) { animation-delay:.35s; } .b:nth-child(3) { animation-delay:.7s; }
+  @keyframes bpop { from { opacity:0; scale:.3; rotate:-5deg; } to { opacity:1; scale:1; rotate:0deg; } }
+  .b.narr { background:var(--pop); font-family:'Bangers'; letter-spacing:.5px; border-radius:3px; }
+  .b.say { background:#fff; font-weight:700; border-radius:26px; }
+  .b.shout { background:var(--hot); color:#fff; font-family:'Bangers'; letter-spacing:1px; font-size:clamp(17px,3.4vh,38px); border-radius:4px; rotate:-2deg; }
+  .b.think { background:#f3f0ff; font-style:italic; font-weight:700; border-style:dashed; border-radius:40px; }
+  .b.think::before { content:"💭 "; font-style:normal; }
+  .b.act { background:#222; color:#9fd8ff; font-style:italic; font-size:clamp(12px,2.2vh,24px); border-color:#9fd8ff; border-radius:6px; }
+  .b.say::after, .b.shout::after { content:""; position:absolute; left:28px; border:11px solid transparent; }
+  .b.say.p-t::after, .b.shout.p-t::after { bottom:-24px; border-top:16px solid var(--ink); }
+  .b.say.p-b::after, .b.shout.p-b::after { top:-24px; border-bottom:16px solid var(--ink); }
+  .p-tl { top:4%; left:3%; } .p-tr { top:4%; right:3%; } .p-bl { bottom:5%; left:3%; } .p-br { bottom:5%; right:3%; }
+  .p-tc { top:4%; left:0; right:0; margin:0 auto; width:fit-content; } .p-bc { bottom:5%; left:0; right:0; margin:0 auto; width:fit-content; }
+  .beat-dots { position:absolute; bottom:1.2%; left:50%; translate:-50% 0; display:flex; gap:6px; z-index:11; }
+  .beat-dots i { width:10px; height:10px; border-radius:50%; background:rgba(255,255,255,.45); border:2px solid #000; }
+  .beat-dots i.on { background:var(--pop); }
+
+  /* ---- Escena de tecleo (fondo negro) ---- */
+  .typer-scene { background:#000; color:#f2f2f2; font-family:'VT323', 'Courier New', monospace; align-items:flex-start; justify-content:flex-start; text-align:left; padding:6% 8%; }
+  .typed { font-size:clamp(20px,4.6vh,52px); line-height:1.35; width:100%; }
+  .typed .ln { min-height:1.35em; white-space:pre-wrap; }
+  .typed .gap { height:.9em; }
+  .typed .clock { color:#ff4d4d; font-size:1.7em; text-shadow:0 0 18px rgba(255,60,60,.7); }
+  .typed .boss { color:var(--pop); font-size:1.25em; text-shadow:0 0 14px rgba(255,204,0,.6); }
+  .typed .cursor { display:inline-block; width:.55em; height:1em; background:#f2f2f2; vertical-align:-.12em; margin-left:2px; animation:blink .8s steps(1) infinite; }
+  @keyframes blink { 50% { opacity:0; } }
+
+  /* ---- Controles ---- */
+  .hud { position:fixed; bottom:12px; left:50%; transform:translateX(-50%); display:flex; gap:8px; align-items:center; z-index:50; background:rgba(0,0,0,.6); padding:6px 10px; border-radius:30px; color:#fff; font-size:14px; }
+  .hud button { background:var(--pop); border:2px solid #000; border-radius:20px; padding:4px 12px; font-family:'Bangers'; font-size:16px; cursor:pointer; }
+  .hud button.on { background:var(--hot); color:#fff; }
+  .progress { position:fixed; top:0; left:0; height:5px; background:var(--pop); z-index:50; transition:width .4s; }
+  .notes { position:fixed; left:0; right:0; bottom:0; max-height:38vh; overflow:auto; background:rgba(10,10,15,.94); color:#f2f2f2; padding:18px 28px 64px; font-size:clamp(15px,2.5vh,24px); line-height:1.5; z-index:40; transform:translateY(100%); transition:transform .35s; border-top:4px solid var(--pop); }
+  .notes.show { transform:none; }
+  .notes h4 { font-family:'Bangers'; color:var(--pop); letter-spacing:1px; font-size:1.2em; margin-bottom:.3em; }
+  .notes i { color:#9fd8ff; }
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="deck" id="deck">
+
+  <!-- 0 PORTADA -->
+  <section class="slide" data-title="Portada" data-notes="<i>(Entrada al micrófono con energía de cansancio de media semana, pero con ritmo ágil)</i>">
+    <div class="scene cover">
+      <div class="ufo-mini">🛸</div>
+      <div class="big">Crónicas de un Disociado<br>en San Pedro</div>
+      <div class="tag">Un stand-up de Genio Maluco</div>
+    </div>
+  </section>
+
+  <!-- 1 BOCHORNO -->
+  <section class="slide" data-title="El Bochorno" data-notes="Aquí nomás en San Pedro, detrás del Archivo Nacional, hay un abastecedor chino... Bueno, uno les dice &quot;el chino&quot; por deporte nacional, aunque atienda un mae de San Carlos. La vara es que yo siempre salgo a darme una vueltica a la hora del almuerzo para huir de la oficina, y ¡tas!, me agarra una seeeed por este hijueputa calor... No, perdón, no era calor, era <b>&quot;bochorno&quot;</b>. Ustedes saben que uno ya cruzó los treinta cuando empieza a usar vocabulario de abuela: <i>&quot;¡Uy, qué es este bochorno!&quot;</i><br><br>Pero maes, era esa sed de la mala. Literalmente iba caminando por la acera y empecé a <b>disociar</b> durísimo; ya sentía donde me daba un burnout, me desconectaba del servidor y me desmayaba, cuando veo a lo lejos un letrero que decía <b>EL OASIS</b>... o no sé si decía &quot;Abastecedor Xinia&quot;, pero la deshidratación ya me tenía con la <b>realidad completamente alterada</b>.">
+    <div class="panel" data-fallback="☀️ EL BOCHORNO ☀️">
+      <img src="img/01-bochorno.jpg" alt="El bochorno" onerror="imgFallback(this)">
+      <div class="caption tl pop-in d1">San Pedro, hora de almuerzo...</div>
+      <div class="bubble pop-in d2" style="top:22%;right:6%">¡Uy, qué es este BOCHORNO!</div>
+      <div class="caption br pop-in d3">Nivel de disociación: realidad alterada</div>
+    </div>
+  </section>
+
+  <!-- 2 YANI NEKO VS REALIDAD -->
+  <section class="slide" data-title="Expectativa vs. Realidad" data-notes="Entro yo esperando que me atienda Yani Neko —sí, la <i>waifu</i> de la serie de anime, toda linda, toda <b>aesthetic</b>—... pero cuando me enfoca la vista y me pongo los anteojos de la realidad, era idéntica a la señora casera de Kung Fu Sion, con los rollos en el pelo, el cigarro colgando y la chancleta lista. <b>Cero aesthetic, pura violencia intrafamiliar en chancletas.</b><br><br>Le digo yo todo derretido: <i>&quot;Regáleme una cervecita para calmar este caloooorsh&quot;</i>.">
+    <div class="panel" data-fallback="✨ Expectativa vs. Realidad 🩴">
+      <img src="img/02-chancleta.jpg" alt="Expectativa vs realidad" onerror="imgFallback(this)">
+      <div class="caption tl pop-in d1">Expectativa: toda aesthetic ✨</div>
+      <div class="caption tr pop-in d2">Realidad: cero aesthetic 🩴</div>
+      <div class="bubble pop-in d3" style="bottom:8%;left:5%">Regáleme una cervecita para calmar este caloooorsh...</div>
+    </div>
+  </section>
+
+  <!-- 3 EL GRITO -->
+  <section class="slide" data-title="El Grito" data-notes="<i>(Act-out: Postura encorvada, cara de pocos amigos, acento nica agresivo)</i><br><b>&quot;¡¿Eeeeh, quién te creés que soy, tu mandadera, hijue la cien mil puta?! ¡Andá traela vos de la cámara, que sos un maldito haragán!&quot;</b><br><br>Mae, tremenda <i>red flag</i> de servicio al cliente. Y yo tieso por dentro: <i>&quot;Claro, claro, mala mía, qué tonto... no estoy en Tokio, caí en el servidor de Managua&quot;</i>. Voy, saco la birra y le pago a la cajera —que era un enigma étnico: no sabía si era china, nica, coreana o tica, era una fusión <b>Costa-Niguense</b> (palabra patentada aquí por su servidor).">
+    <div class="scene shout-scene">
+      <div class="big">¡¿QUIÉN TE CREÉS QUE SOY,<br>TU MANDADERA?!</div>
+      <div class="sub" style="color:#fff">¡Andá traela vos de la cámara, maldito haragán!</div>
+      <div class="flag pop-in d2">🚩🚩🚩</div>
+      <div class="caption br pop-in d3" style="max-width:60%">Servidor detectado: Managua 🇳🇮 · Fusión Costa-Niguense™</div>
+    </div>
+  </section>
+
+  <!-- 4 SINPE -->
+  <section class="slide" data-title="El SINPE de 4 tejas" data-notes="Le paso el SINPE Móvil, todo bien, y cuando ya voy saliendo digo: <i>&quot;¡Suave, me faltan dos cigarros sueltos!&quot;</i><br><br>Maes... <b>4 tejas</b> me cobró por dos sueltos la muy majeadora. ¡Sentí que me cobró 400 tejas! Y ahí viene la humillación de treintañero sin efectivo: me tocaba pedirle OTRA VEZ el número para hacerle un SINPE por cuatrocientos colones... porque ya había cerrado la app hacía diez segundos y mi cerebro de pez no tiene memoria fotográfica. La mae se me quedó viendo como un <b>NPC bugeado</b> a punto de reventarme la chancleta en la jupa, ¡como si Hacienda la fuera a auditar por un SINPE de cuatro tejas!">
+    <div class="scene sinpe-scene">
+      <div class="phone">
+        <div class="bank">SINPE Móvil</div>
+        <div style="font-size:1.8vh">Monto a transferir</div>
+        <div class="amt">₡400</div>
+        <div class="err">⚠ Número olvidado.<br>Cerebro de pez detectado.</div>
+      </div>
+      <div>
+        <div class="tejas">¡400 TEJAS!</div>
+        <div class="sub">(eran 4... pero se sintieron como 400)</div>
+        <div class="caption pop-in d2" style="position:relative;max-width:100%;margin-top:4vh;transform:rotate(-2deg)">Hacienda auditando el SINPE: 👀</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 BARRA DE VIDA -->
+  <section class="slide" data-title="Barra de vida" data-notes="Por cierto, ¿en qué estaba?... ¡Aaaah sí, la disociada! Salgo del chino, me abro la birrita, prendo el blanco y siento donde me vuelve el alma al cuerpo y <b>me sube la barra de vida al 100%</b>. ¡Qué rico! <i>(Tono de locutor comercial)</i> Agradecimiento especial no pagado a Imperial, porque la cerveza de rica es <b>&quot;Imperiaaaaaal&quot;</b>.">
+    <div class="scene hp-scene">
+      <div class="hp-label">PLAYER 1 — TREINTAÑERO DISOCIADO</div>
+      <div class="hp-bar"><div class="hp-fill"></div></div>
+      <div class="hp-label">🍺 + 🚬 = ALMA DE VUELTA AL CUERPO</div>
+      <div class="big pop-in d4" style="margin-top:3vh">¡IMPERIAAAAAAL!</div>
+    </div>
+  </section>
+
+  <!-- 6 PLATILLO -->
+  <section class="slide" data-title="¡Juaaaaazzz! Un platillo" data-notes="En eso giro la cámara hacia mi mano derecha y <b>¡Juaaaaaazzzz! ¡Un platillo volador parqueado!</b> Y yo súper paniqueado: <i>&quot;¡Noooo, ¿en qué momento cayó este evento aquí?!&quot;</i>. Ya iba yo a chepear cuando pensé: <i>&quot;¡Jamás! Si me agarran los aliens, fijo me meten una sonda por el culo&quot;</i>.<br><br>Pero suave, suave, suave... páreme el platillo volador un toque. ¿Cuál es esa fijación y ese trauma de Hollywood con que nos quieren hacer eso? Si los aliens bajaran a San Pedro hoy mismo, en realidad vendrían a salvarnos de este bucle de NPCs en el que vivimos los terrícolas:">
+    <div class="panel" data-fallback="🛸 ¡JUAAAAAZZZ! 🛸">
+      <img src="img/03-platillo.jpg" alt="Platillo volador" onerror="imgFallback(this)">
+      <div class="caption tl pop-in d1" style="font-size:clamp(24px,6vh,64px)">¡JUAAAAAZZZ!</div>
+      <div class="bubble pop-in d2" style="bottom:10%;left:5%">¡¿En qué momento cayó este evento aquí?!</div>
+      <div class="caption br pop-in d3">Pensamiento intrusivo: la sonda 😰</div>
+    </div>
+  </section>
+
+  <!-- 7 BUCLE -->
+  <section class="slide" data-title="El bucle de NPCs" data-notes="<b>Lunes:</b> Levantarse, existir, presa en Circunvalación, trabajar, comer.<br><b>Martes:</b> Levantarse, trabajar, reunión que pudo ser un correo, comer.<br><b>Miércoles / Jueves:</b> Levantarse, trabajar, comer.<br><b>Viernes:</b> Levantarse, trabajar, comer... ¡y pegársela hasta borrar casete!<br><b>Sábado:</b> Seguir pegándosela y dormir hasta las 4 de la tarde... <i>(Pausa, mira al público)</i> Si uno duerme toda la goma sin desayunar ni almorzar, ¿eso cuenta como ayuno intermitente y <i>fit</i>, verdad?<br><b>Domingo:</b> Levantarse con goma moral cuestionando tus decisiones de vida, ir a misa a limpiar el karma, comer... ¡y vueltaaaaa a repetir el bucle!<br><br>Es una montaña rusa de la que no te podés bajar. Honestamente, maes, prefiero mil veces que los aliens me metan la sonda antes de volver a escuchar a un jefe tóxico decir <i>&quot;aquí somos una familia&quot;</i> o que me claven una reunión un viernes a las 4:50 de la tarde.">
+    <div class="scene loop-scene">
+      <div class="big">🔁 EL BUCLE DE LOS NPCs 🔁</div>
+      <div class="week">
+        <div class="day"><b>LUN</b>Levantarse, existir, presa en Circunvalación, trabajar, comer.</div>
+        <div class="day"><b>MAR</b>Levantarse, trabajar, reunión que pudo ser un correo, comer.</div>
+        <div class="day"><b>MIÉ</b>Levantarse, trabajar, comer.</div>
+        <div class="day"><b>JUE</b>Levantarse, trabajar, comer.</div>
+        <div class="day"><b>VIE</b>Levantarse, trabajar, comer... ¡y pegársela hasta borrar casete!</div>
+        <div class="day"><b>SÁB</b>Dormir hasta las 4 p.m. ¿Ayuno intermitente fit? 🤔</div>
+        <div class="day"><b>DOM</b>Goma moral, misa para limpiar el karma... ¡y vueltaaaa!</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 TELESCOPIO -->
+  <section class="slide" data-title="Las batas blancas" data-notes="...¿En qué estaba? ¡Aaaah sí, los aliens! Me voy bordeando unas canchas de fútbol, veo un parquecito medio familiar, agarro el celular y meto el <b>zoom modo telescopio</b> al máximo: ¡Había personas humanaaaaaaas con batas blancas caminando alrededor de la nave! Fijo eran traidores colaboracionistas ayudando a los alienígenas a procesar terrícolas... (y a meterles sondas por el culo, porque esa maldad sí es de humanos, <b>fijo eran de Recursos Humanos</b>).<br><br>Estaba yo encaramado en mi atalaya de vigía cuando me encuentro en el suelo una tocola que algún alma caritativa dejó a medias. Viendo que ya estaba en pleno apocalipsis alienígena, dije: <i>&quot;¿Qué rayos? X, por una vez no hará daño&quot;</i>.<br><i>(Act-out: Calada profundísima y tos dramática de fumador arrepentido)</i>">
+    <div class="scene scope-scene">
+      <div class="rh pop-in d2">⚠ Colaboracionistas detectados: Recursos Humanos</div>
+      <div class="lens">🥼🛸🥼</div>
+      <div class="sub">📱 Zoom modo telescopio: 100x</div>
+    </div>
+  </section>
+
+  <!-- 9 REINICIO WINDOWS -->
+  <section class="slide" data-title="Se reinició el Windows" data-notes="Mae... apenas solté el humo, <b>se me reinició el Windows</b> y empezó a desvanecerse el espejismo que el &quot;bochorno&quot; <i>(guiño, guiño)</i> había ocasionado en mí. Entré en razón: ¡No había ninguna invasión! ¡Estaba en San Pedro de Montes de Oca, frente al Archivo Nacional! ¡Claroooo, ese edificio gubernamental de la patria <i>(saludo militar firme)</i> tiene forma de platillo volador! Y los maes de bata blanca eran los archivistas saliendo a almorzar, nadie nos iba a abducir ni a meter sondas... <i>(Pone cara triste y decepcionada)</i>.<br><br>Pero el verdadero terror y el bajón real apenas empezaban: se me acabó la hora de almuerzo y tenía que volver a la oficina.">
+    <div class="scene bsod">
+      <div class="sad">:(</div>
+      <h2>Tu cerebro tuvo un problema y necesita reiniciarse. Estamos recopilando información sobre el bochorno.</h2>
+      <p>Progreso: <span class="pct"></span></p>
+      <p style="margin-top:2vh">El "platillo volador" era el Archivo Nacional 🫡 · Los de bata blanca eran archivistas almorzando.</p>
+      <p style="margin-top:1vh">Código de detención: SE_ACABO_LA_HORA_DE_ALMUERZO</p>
+    </div>
+  </section>
+
+  <!-- 10 POEMA -->
+  <section class="slide" data-title="El poeta desgraciado" data-notes="La vara es que subo yo supuestamente a &quot;trabajar&quot; un viernes por la tarde... pero como todavía andaba volado, en lugar de bretear me puse a escribir este mismo <i>stand-up comedy</i> y me salió el poeta desgraciado que llevo dentro. Empecé a tirar lírica en el teclado:<br><i>(Cambia a tono de declamación épica con ritmo de poema)</i>">
+    <div class="scene poem-scene">
+      <div class="bar"><span>📄 standup_NO_ES_TRABAJO.docx</span><span>Viernes <span class="clock">3:12 p.m.</span></span></div>
+      <div class="poem-lines">
+        <div style="animation-delay:.4s">Como después de esa abducción al mediodía tenía que ir a trabajar,</div>
+        <div style="animation-delay:1.4s">y del calor mi mente no paraba de disociar y divagar,</div>
+        <div style="animation-delay:2.4s">aquel puro me terminé de mandar para al brete llegar a volar.</div>
+        <div style="animation-delay:3.4s">Cuando iba llegando, lo único que deseaba era que me dejaran trabajar en paz,</div>
+        <div style="animation-delay:4.4s">pero una dinámica de Recursos Humanos no me iba a dejar jamás.</div>
+        <div style="animation-delay:5.4s">Vi pasar a la novia del jefe y ni se dignó a saludar...</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 ASCENSOR -->
+  <section class="slide" data-title="El ascensor" data-notes="<i>Corriendo al ascensor me subí raudo y veloz,<br>sin saber que el primo del jefe uno bien hediondo se iba a rajar.<br>Aguantando la respiración llegué al segundo piso casi morado,<br>¡mejor por las gradas hubiera subido sin permiso, aunque llegara sudado!</i>">
+    <div class="panel" data-fallback="🛗 EL ASCENSOR 💨">
+      <img src="img/04-ascensor.jpg" alt="El ascensor" onerror="imgFallback(this)">
+      <div class="caption tl pop-in d1">...al ascensor me subí raudo y veloz,</div>
+      <div class="caption tr pop-in d2">sin saber que el primo del jefe uno bien hediondo se iba a rajar 💨</div>
+      <div class="caption br pop-in d3">¡Mejor por las gradas hubiera subido!</div>
+    </div>
+  </section>
+
+  <!-- 12 TECLEO: 4:50 -->
+  <section class="slide" data-title="Viernes 4:50 p.m." data-notes="En eso termino de escribir el poema, vuelvo a ver el reloj de la compu... ¡y ya eran las <b>4:50 de la tarde de un viernes</b>! Cuando de repente nos llaman a todos de urgencia a la Sala de Reuniones.">
+    <div class="scene typer-scene"><div class="typed" id="typed"></div></div>
+  </section>
+
+  <!-- 13 PIZZA -->
+  <section class="slide" data-title="La frase maldita" data-notes="Abro la puerta y se hace realidad el final de mi poema con el jefe todo contento tirando la mayor <i>red flag</i> de la historia y diciendo la frase maldita:<br><br><b>&quot;¡Somos una gran familia, pónganse la camiseta... y agarren un pedazo de pizza!&quot;</b>">
+    <div class="panel" data-fallback="🍕 VIERNES 4:50 P.M. 🍕">
+      <img src="img/05-pizza.jpg" alt="La reunión" onerror="imgFallback(this)">
+      <div class="caption tl pop-in d1">🕓 Viernes, 4:50 p.m.</div>
+      <div class="bubble shout pop-in d2" style="top:18%;right:4%">¡SOMOS UNA GRAN FAMILIA, PÓNGANSE LA CAMISETA... Y AGARREN UN PEDAZO DE PIZZA!</div>
+      <div class="caption bl pop-in d3">🚩 La mayor red flag de la historia</div>
+    </div>
+  </section>
+
+  <!-- 13 FIN -->
+  <section class="slide" data-title="¡Fiiiin!" data-notes="<i>(Llora en dramático tapándose la cara)</i> ¡Fiiiin! ¡Qué susto me pegué ese día, amiguitos! Así que ya saben: si van a salir a la hora del almuerzo en San Pedro, no fumen ni beban cerveza... ¡porque se vuelven cuerdooooosss y les toca volver a la oficina... ¡y qué pereza!<br><br><b>Y ese consejo les doy, porque Genio Maluco soy.</b>">
+    <div class="scene end-scene">
+      <div class="big">😭 ¡FIIIIN! 😭</div>
+      <div class="moral">Si van a salir a la hora del almuerzo en San Pedro, no fumen ni beban cerveza... ¡porque se vuelven <b>cuerdooooosss</b> y les toca volver a la oficina... ¡y qué pereza!</div>
+      <div class="sign pop-in d2">Y ese consejo les doy, porque Genio Maluco soy.</div>
+    </div>
+  </section>
+</div>
+
+<div class="notes" id="notes"><h4 id="notesTitle"></h4><div id="notesBody"></div></div>
+
+<div class="hud">
+  <button onclick="go(-1)">◀</button>
+  <span id="counter">1 / 14</span>
+  <button onclick="go(1)">▶</button>
+  <button id="btnNotes" onclick="toggleNotes()" title="Tecla N">Guion</button>
+  <button id="btnAuto" onclick="toggleAuto()" title="Tecla A">Auto</button>
+  <button onclick="toggleFS()" title="Tecla F">⛶</button>
+</div>
+
+<script>
+  const slides = [...document.querySelectorAll('.slide')];
+  let idx = 0, beat = 0, autoTimer = null;
+
+  function imgFallback(img) { img.closest('.panel').classList.add('noimg'); }
+
+  /* ===== DIÁLOGOS POR ESCENA =====
+     Cada escena es una lista de viñetas; cada viñeta es una lista de burbujas [tipo, posición, texto].
+     Tipos: narr (narrador), say (habla), shout (grito), think (pensamiento), act (acotación).
+     Posiciones: tl, tr, bl, br, tc, bc. */
+  const BEATS = {
+    0: [
+      [['act','bc','(Entrada al micrófono con energía de cansancio de media semana)']],
+      [['narr','bc','Un treintañero escapa de la oficina a la hora del almuerzo... sin saber lo que le esperaba.']]
+    ],
+    1: [
+      [['narr','tl','Aquí nomás en San Pedro, detrás del Archivo Nacional, hay un abastecedor chino...'],
+       ['think','br','(Bueno, le decimos "el chino" por deporte nacional... aunque lo atienda un mae de San Carlos)']],
+      [['narr','tl','Salgo a darme una vueltica para huir de la oficina y ¡tas!...'],
+       ['say','br','¡Qué seeeed por este hijueputa calor!']],
+      [['say','tr','No, perdón... no era calor. Era "BOCHORNO".'],
+       ['narr','bl','Uno ya cruzó los treinta cuando habla como doña llegando a los 40: "¡Uy, qué es este bochorno!"']],
+      [['narr','tl','Iba por la acera y empecé a DISOCIAR durísimo...'],
+       ['think','br','Burnout en 3, 2, 1... me desconecto del servidor...']],
+      [['narr','tl','...cuando veo a lo lejos un letrero: EL OASIS 🌴'],
+       ['think','br','¿O decía "Abastecedor Xinia"? Ya andaba con la realidad completamente alterada...']]
+    ],
+    2: [
+      [['think','tl','Fijo me atiende Yani Neko... la waifu del anime, toda linda, toda aesthetic ✨']],
+      [['narr','tr','Pero con los anteojos de la realidad: la casera de Kung Fu Sion. Rollos en el pelo, cigarro colgando, chancleta lista.'],
+       ['narr','bl','Cero aesthetic. Pura violencia intrafamiliar en chancletas 🩴']],
+      [['say','bl','Regáleme una cervecita para calmar este caloooorsh...']]
+    ],
+    3: [
+      [['act','tl','(Postura encorvada, cara de pocos amigos, acento nica agresivo)']],
+      [['think','bl','Mae... tremenda red flag de servicio al cliente 🚩'],
+       ['think','br','Claro, claro, mala mía... no estoy en Tokio, caí en el servidor de Managua.']],
+      [['narr','tl','La cajera: ¿china, nica, coreana o tica? Un enigma étnico...'],
+       ['say','br','¡Una fusión Costa-Niguense! (palabra patentada por su servidor)']]
+    ],
+    4: [
+      [['say','tc','¡Suave! Me faltan dos cigarros sueltos para acompañar la birra.']],
+      [['narr','tc','Maes... 4 tejas me cobró por dos sueltos la muy majeadora.'],
+       ['think','bc','Ya había cerrado la app... ¡a pedirle OTRA VEZ el número! Cerebro de pez 🐟']],
+      [['narr','tc','Me vio como un NPC bugeado a punto de reventarme la chancleta en la jupa...'],
+       ['say','bc','¡Ni que Hacienda la fuera a auditar por un SINPE de cuatro tejas!']]
+    ],
+    5: [
+      [['say','tl','¿En qué estaba?... ¡Aaaah sí, la disociada!']],
+      [['narr','bl','Me abro la birrita, prendo el blanco... y me vuelve el alma al cuerpo.']],
+      [['act','tr','(Tono de locutor comercial)'],
+       ['say','br','Agradecimiento no pagado a Imperial... ¡porque la cerveza de rica es Imperiaaaal!']]
+    ],
+    6: [
+      [['narr','tl','Giro la cámara hacia mi mano derecha y...'],
+       ['shout','tr','¡JUAAAAAZZZ! ¡Un platillo volador parqueado!']],
+      [['say','bl','¡Noooo! ¿En qué momento cayó este evento aquí?']],
+      [['think','br','Iba a chepear... ¡Jamás! Si me agarran los aliens, fijo me meten una sonda por el culo 😰']],
+      [['say','tl','Pero suave, suave, suave... páreme el platillo un toque.'],
+       ['narr','br','¿Cuál es el trauma de Hollywood con la sonda? Si los aliens bajaran hoy, vendrían a salvarnos de este bucle de NPCs...']]
+    ],
+    7: [
+      [['narr','bc','Una montaña rusa de la que no te podés bajar 🎢']],
+      [['act','tl','(Pausa dudando, mira al público)'],
+       ['say','bc','Si uno duerme toda la goma sin desayunar ni almorzar... ¿cuenta como ayuno fit, verdad? 🤔']],
+      [['say','bl','Prefiero mil veces la sonda antes que oír a un jefe tóxico decir "aquí somos una familia"...'],
+       ['shout','tr','¡...o que me claven una reunión un viernes a las 4:50!']]
+    ],
+    8: [
+      [['say','bl','...¿En qué estaba? ¡Aaaah sí, los aliens!'],
+       ['narr','br','Bordeo las canchas, saco el cel y meto zoom modo telescopio...']],
+      [['shout','br','¡Personas humanaaaas con batas blancas!'],
+       ['think','bl','Fijo son traidores colaboracionistas... y la maldad es humana: fijo son de Recursos Humanos.']],
+      [['narr','bl','En mi atalaya de vigía encuentro una tocola que un alma caritativa dejó a medias.'],
+       ['say','br','¿Qué rayos? X, por una vez no hará daño.']],
+      [['act','bc','(Calada profundísima y tos dramática de fumador arrepentido) *¡COF, COF!*']]
+    ],
+    9: [
+      [['narr','tr','Apenas solté el humo... se me reinició el Windows.']],
+      [['shout','br','¡Claroooo! ¡El Archivo Nacional tiene forma de platillo volador! 🫡']],
+      [['act','tr','(Cara triste y decepcionada)'],
+       ['say','br','Los de bata blanca eran archivistas saliendo a almorzar... nadie nos iba a meter sondas...']],
+      [['narr','br','Pero el verdadero terror apenas empezaba: se acabó la hora de almuerzo.']]
+    ],
+    10: [
+      [['narr','br','Subo a "trabajar" un viernes por la tarde... pero en vez de bretear, me pongo a escribir este stand-up.']],
+      [['think','br','Y me salió el poeta desgraciado que llevo dentro... ✍️']]
+    ],
+    11: [
+      [['narr','tl','Vi pasar a la novia del jefe y ni se dignó a saludar...']],
+      [['say','tr','¡Al ascensor, raudo y veloz!']],
+      [['narr','tl','Sin saber que el primo del jefe uno bien hediondo se iba a rajar...'],
+       ['shout','br','💨 ¡PRRRRRT!']],
+      [['think','bl','Aguantando la respiración... segundo piso... casi morado 🤢'],
+       ['say','tr','¡Mejor por las gradas hubiera subido, aunque llegara sudado!']]
+    ],
+    13: [
+      [['narr','tl','Abro la puerta de la Sala de Reuniones... y se hace realidad el final de mi poema.']],
+      [['shout','tr','¡Somos una gran familia, pónganse la camiseta... y agarren un pedazo de pizza! 🍕'],
+       ['narr','bl','🚩 La mayor red flag de la historia']],
+      [['act','bl','(Llora en dramático tapándose la cara)'],
+       ['say','br','¡NOOOOOO! 😭']]
+    ]
+  };
+
+  /* ===== ESCENAS DE TECLEO =====
+     Cada clic escribe el siguiente bloque de líneas. Línea: [texto, clase opcional]; '' = espacio. */
+  const TYPER = {
+    12: [
+      [['...¡mejor por las gradas hubiera subido, aunque llegara sudado!'], [''], ['Termino de escribir el poema. Ctrl + S.']],
+      [[''], ['Vuelvo a ver el reloj de la compu...'], ['🕓 VIERNES — 4:50 P.M.', 'clock']],
+      [[''], ['De repente se asoma el jefe por la puerta:'], ['—¡REUNIÓN URGENTE! ¡TODOS A LA SALA!', 'boss']]
+    ]
+  };
+  let typeToken = 0;
+
+  function lineEl(text, cls) {
+    const d = document.createElement('div');
+    d.className = 'ln' + (cls ? ' ' + cls : '') + (text === '' ? ' gap' : '');
+    return d;
+  }
+  function renderTyper() {
+    const steps = TYPER[idx], box = slides[idx].querySelector('.typed');
+    const token = ++typeToken;
+    box.innerHTML = '';
+    const cursor = document.createElement('span'); cursor.className = 'cursor';
+    // bloques anteriores: aparecen completos
+    steps.slice(0, beat).flat().forEach(([t, c]) => { const d = lineEl(t, c); d.textContent = t; box.appendChild(d); });
+    // bloque actual: se teclea letra por letra
+    const queue = steps[beat].map(([t, c]) => [t, c]);
+    (function nextLine() {
+      if (token !== typeToken) return;
+      if (!queue.length) { (box.lastElementChild || box).appendChild(cursor); return; }
+      const [t, c] = queue.shift(), d = lineEl(t, c); box.appendChild(d);
+      const chars = [...t]; let k = 0;
+      (function tick() {
+        if (token !== typeToken) return;
+        if (k >= chars.length) { setTimeout(nextLine, 280); return; }
+        d.textContent += chars[k++]; d.appendChild(cursor);
+        setTimeout(tick, c ? 70 : 38);
+      })();
+    })();
+    document.getElementById('counter').textContent = `${idx + 1} / ${slides.length} · viñeta ${beat + 1}/${steps.length}`;
+  }
+  function stepsOf(i) { return (BEATS[i] || TYPER[i] || null); }
+
+  function esc(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+
+  function renderBeat() {
+    if (TYPER[idx]) { renderTyper(); return; }
+    typeToken++;
+    const s = slides[idx], list = BEATS[idx];
+    const host = s.firstElementChild;
+    host.querySelector('.beats')?.remove();
+    host.querySelector('.beat-dots')?.remove();
+    if (!list) return;
+    const layer = document.createElement('div');
+    layer.className = 'beats';
+    layer.innerHTML = list[beat].map(([type, pos, text]) =>
+      `<div class="b ${type} p-${pos} p-${pos[0]}">${esc(text)}</div>`).join('');
+    host.appendChild(layer);
+    const dots = document.createElement('div');
+    dots.className = 'beat-dots';
+    dots.innerHTML = list.map((_, k) => `<i class="${k <= beat ? 'on' : ''}"></i>`).join('');
+    host.appendChild(dots);
+    document.getElementById('counter').textContent = `${idx + 1} / ${slides.length} · viñeta ${beat + 1}/${list.length}`;
+  }
+
+  function show(i, atEnd = false) {
+    idx = (i + slides.length) % slides.length;
+    slides.forEach((s, k) => { s.classList.toggle('active', k === idx); s.classList.toggle('has-beats', !!BEATS[k]); });
+    beat = atEnd && stepsOf(idx) ? stepsOf(idx).length - 1 : 0;
+    // reinicia animaciones
+    const s = slides[idx]; s.querySelectorAll('*').forEach(el => { el.style.animationName = 'none'; el.offsetHeight; el.style.animationName = ''; });
+    document.getElementById('counter').textContent = `${idx + 1} / ${slides.length}`;
+    document.getElementById('progress').style.width = `${(idx + 1) / slides.length * 100}%`;
+    document.getElementById('notesTitle').textContent = `${idx + 1}. ${s.dataset.title}`;
+    document.getElementById('notesBody').innerHTML = s.dataset.notes || '';
+    location.hash = idx + 1;
+    renderBeat();
+  }
+  function go(d) {
+    const list = stepsOf(idx);
+    if (list && d > 0 && beat < list.length - 1) { beat++; renderBeat(); return; }
+    if (list && d < 0 && beat > 0) { beat--; renderBeat(); return; }
+    show(idx + d, d < 0);
+  }
+  function toggleNotes() { document.getElementById('notes').classList.toggle('show'); document.getElementById('btnNotes').classList.toggle('on'); }
+  function toggleAuto() {
+    const b = document.getElementById('btnAuto');
+    if (autoTimer) { clearInterval(autoTimer); autoTimer = null; b.classList.remove('on'); }
+    else { autoTimer = setInterval(() => go(1), 5000); b.classList.add('on'); }
+  }
+  function toggleFS() { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen(); }
+
+  document.addEventListener('keydown', e => {
+    if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); go(1); }
+    if (['ArrowLeft', 'PageUp'].includes(e.key)) go(-1);
+    if (e.key.toLowerCase() === 'n') toggleNotes();
+    if (e.key.toLowerCase() === 'a') toggleAuto();
+    if (e.key.toLowerCase() === 'f') toggleFS();
+  });
+  document.getElementById('deck').addEventListener('click', e => { if (e.clientX > innerWidth / 2) go(1); else go(-1); });
+
+  show((parseInt(location.hash.slice(1)) || 1) - 1);
+</script>
+</body>
+</html>
+
