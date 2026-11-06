@@ -152,10 +152,76 @@
   .notes.show { transform:none; }
   .notes h4 { font-family:'Bangers'; color:var(--pop); letter-spacing:1px; font-size:1.2em; margin-bottom:.3em; }
   .notes i { color:#9fd8ff; }
+
+  /* ---- Pop-up Recomendación Landscape (Móvil) ---- */
+  .rotate-modal { position:fixed; inset:0; background:rgba(10,10,16,.92); z-index:200; display:none; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(6px); }
+  .rotate-modal.show { display:flex; }
+  .rotate-card { background:var(--paper); color:var(--ink); border:6px solid var(--ink); border-radius:12px; box-shadow:10px 10px 0 var(--pop); max-width:440px; width:100%; padding:22px 20px; text-align:center; animation:bpop .4s cubic-bezier(.2,1.6,.4,1) both; }
+  .rotate-icon { font-size:54px; display:inline-block; margin-bottom:8px; animation:tiltPhone 2.2s ease-in-out infinite; }
+  @keyframes tiltPhone { 0%,15% { transform:rotate(0deg); } 45%,70% { transform:rotate(-90deg) scale(1.08); } 100% { transform:rotate(0deg); } }
+  .rotate-card h3 { font-family:'Bangers'; font-size:30px; letter-spacing:1px; color:var(--hot); text-shadow:2px 2px 0 #000; margin-bottom:8px; }
+  .rotate-card p { font-size:16px; font-weight:700; line-height:1.35; margin-bottom:16px; }
+  .rotate-actions { display:flex; flex-direction:column; gap:10px; }
+  .rotate-btn { background:var(--pop); color:var(--ink); border:4px solid var(--ink); border-radius:26px; padding:10px 16px; font-family:'Bangers'; font-size:20px; letter-spacing:1px; cursor:pointer; box-shadow:4px 4px 0 var(--ink); }
+  .rotate-btn.primary { background:var(--hot); color:#fff; }
+  .rotate-btn.secondary { background:#fff; font-size:17px; }
+  .rotate-hint { display:none; margin-top:10px; font-size:14px; font-weight:700; color:#b80000; background:#ffe8e8; border:2px solid var(--ink); border-radius:6px; padding:6px 10px; }
+  .hud .btn-rotate { display:none; background:var(--cool); }
+
+  /* ---- Mejoras Responsivas para Móviles ---- */
+  @media (max-width: 960px) {
+    .hud { bottom:6px; padding:4px 8px; gap:5px; width:max-content; max-width:96vw; flex-wrap:wrap; justify-content:center; }
+    .hud button { font-size:14px; padding:3px 9px; }
+    .hud .btn-rotate { display:inline-block; }
+  }
+
+  /* MÓVIL EN HORIZONTAL (LANDSCAPE): Viñeta 16:9 completa y cuadros de diálogo legibles sin solaparse */
+  @media (max-width: 960px) and (orientation: landscape) {
+    .panel, .scene { height:82vh; width:min(94vw, calc(82vh * 16 / 9)); margin-bottom:6vh; border-width:4px; box-shadow:6px 6px 0 var(--pop); }
+    .b { max-width:48%; padding:.35em .65em; border-width:3px; font-size:clamp(11px, 3.2vh, 15px); line-height:1.18; box-shadow:3px 3px 0 rgba(0,0,0,.65); }
+    .b.shout { font-size:clamp(13px, 3.6vh, 17px); }
+    .b.act { font-size:clamp(10px, 2.7vh, 13px); }
+    .p-tc, .p-bc { max-width:78%; }
+    .p-tl { top:3%; left:2%; } .p-tr { top:3%; right:2%; }
+    .p-bl { bottom:6%; left:2%; } .p-br { bottom:6%; right:2%; }
+    .b.say::after, .b.shout::after { display:none; }
+    .week .day { min-height:22vh; padding:4% 3%; font-size:clamp(9px, 2.2vh, 13px); }
+  }
+
+  /* MÓVIL EN VERTICAL (PORTRAIT): Imagen arriba 100% limpia y cuadros de diálogo debajo 100% legibles */
+  @media (max-width: 860px) and (orientation: portrait) {
+    .slide { flex-direction:column; justify-content:flex-start; align-items:center; padding:18px 8px 76px; overflow-y:auto; gap:14px; }
+    .panel, .scene { width:95vw; aspect-ratio:16/9; flex-shrink:0; border-width:4px; box-shadow:6px 6px 0 var(--pop); }
+    .beats { position:static; width:95vw; display:flex; flex-direction:column; gap:10px; pointer-events:auto; z-index:20; flex-shrink:0; }
+    .b { position:relative !important; inset:auto !important; max-width:100% !important; width:100% !important; margin:0 !important; font-size:16px !important; line-height:1.32 !important; padding:10px 14px !important; border-width:3px !important; box-shadow:4px 4px 0 var(--ink) !important; rotate:0deg !important; }
+    .b.shout { font-size:18px !important; }
+    .b.say::after, .b.shout::after { display:none !important; }
+    .loop-scene, .sinpe-scene, .poem-scene, .bsod, .typer-scene, .end-scene { aspect-ratio:auto; min-height:36vh; padding:16px 14px; }
+    .sinpe-scene { flex-direction:column; gap:12px; }
+    .sinpe-scene .phone { width:130px; padding:10px 8px; }
+    .week { grid-template-columns:repeat(2, 1fr); gap:8px; }
+    .week .day { min-height:auto; padding:8px; font-size:13px; }
+    .week .day b { font-size:16px; margin-bottom:2px; }
+    .lens { width:200px; height:200px; }
+    .typed { font-size:20px; }
+    .poem-lines { margin-top:28px; font-size:16px; }
+  }
 </style>
 </head>
 <body>
 <div class="progress" id="progress"></div>
+<div class="rotate-modal" id="rotateModal">
+  <div class="rotate-card">
+    <div class="rotate-icon">📱🔄</div>
+    <h3>¡RECOMENDADO EN LANDSCAPE!</h3>
+    <p>Este Web Cómic está diseñado en formato panorámico <b>16:9</b>. Para ver las ilustraciones en grande y leer los cuadros de diálogo como en el cine, te recomendamos girar tu celular a <b>modo horizontal (Landscape)</b>.</p>
+    <div class="rotate-actions">
+      <button class="rotate-btn primary" onclick="rotateToLandscape()">🔄 GIRAR AUTOMÁTICAMENTE</button>
+      <button class="rotate-btn secondary" onclick="dismissRotateModal()">📖 Leer en vertical (Modo adaptado)</button>
+    </div>
+    <div class="rotate-hint" id="rotateHint">💡 Si tu celular tiene bloqueado el giro automático, actívalo en tu barra de control y voltéalo horizontalmente.</div>
+  </div>
+</div>
 <div class="deck" id="deck">
 
   <!-- 0 PORTADA -->
@@ -327,8 +393,8 @@
   <span id="counter">1 / 14</span>
   <button onclick="go(1)">▶</button>
   <button id="btnNotes" onclick="toggleNotes()" title="Tecla N">Guion</button>
-  <button id="btnAuto" onclick="toggleAuto()" title="Tecla A">Auto</button>
-  <button onclick="toggleFS()" title="Tecla F">⛶</button>
+  <button id="btnAuto" onclick="toggleAuto()" title="Tecla A">Auto</button> <button onclick="location.href='personajes.html'" title="Tecla P — Biblia y Base de Datos de Personajes">🪪 Personaje / DB</button>
+  <button class="btn-rotate" onclick="rotateToLandscape()" title="Girar a modo horizontal (Landscape)">🔄 Girar</button> <button onclick="toggleFS()" title="Tecla F">⛶</button>
 </div>
 
 <script>
@@ -484,14 +550,14 @@
     typeToken++;
     const s = slides[idx], list = BEATS[idx];
     const host = s.firstElementChild;
-    host.querySelector('.beats')?.remove();
+    s.querySelectorAll('.beats').forEach(el => el.remove());
     host.querySelector('.beat-dots')?.remove();
     if (!list) return;
     const layer = document.createElement('div');
     layer.className = 'beats';
     layer.innerHTML = list[beat].map(([type, pos, text]) =>
       `<div class="b ${type} p-${pos} p-${pos[0]}">${esc(text)}</div>`).join('');
-    host.appendChild(layer);
+    (window.matchMedia('(max-width: 860px) and (orientation: portrait)').matches ? s : host).appendChild(layer);
     const dots = document.createElement('div');
     dots.className = 'beat-dots';
     dots.innerHTML = list.map((_, k) => `<i class="${k <= beat ? 'on' : ''}"></i>`).join('');
@@ -530,10 +596,77 @@
     if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); go(1); }
     if (['ArrowLeft', 'PageUp'].includes(e.key)) go(-1);
     if (e.key.toLowerCase() === 'n') toggleNotes();
-    if (e.key.toLowerCase() === 'a') toggleAuto();
+    if (e.key.toLowerCase() === 'a') toggleAuto(); if (e.key.toLowerCase() === 'p') location.href = 'personajes.html';
     if (e.key.toLowerCase() === 'f') toggleFS();
   });
-  document.getElementById('deck').addEventListener('click', e => { if (e.clientX > innerWidth / 2) go(1); else go(-1); });
+  let lastSwipe = 0;
+  document.getElementById('deck').addEventListener('click', e => { if (Date.now() - lastSwipe < 350) return; if (e.clientX > innerWidth / 2) go(1); else go(-1); });
+
+  /* ===== DETECCIÓN MÓVIL, POP-UP LANDSCAPE Y GIRO AUTOMÁTICO ===== */
+  let rotateDismissed = false;
+  function isMobileDevice() {
+    return window.matchMedia('(max-width: 900px) and (pointer: coarse)').matches || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+  }
+  let lastPortraitState = window.innerHeight > window.innerWidth;
+  function checkOrientationPrompt() {
+    const modal = document.getElementById('rotateModal');
+    const isPortrait = window.innerHeight > window.innerWidth;
+    if (isPortrait !== lastPortraitState) {
+      lastPortraitState = isPortrait;
+      renderBeat();
+    }
+    if (!modal) return;
+    if (isMobileDevice() && window.innerHeight > window.innerWidth && !rotateDismissed) {
+      modal.classList.add('show');
+    } else if (window.innerWidth > window.innerHeight) {
+      modal.classList.remove('show');
+    }
+  }
+  function dismissRotateModal() {
+    rotateDismissed = true;
+    document.getElementById('rotateModal').classList.remove('show');
+  }
+  async function rotateToLandscape() {
+    try {
+      const root = document.documentElement;
+      if (!document.fullscreenElement) {
+        if (root.requestFullscreen) await root.requestFullscreen();
+        else if (root.webkitRequestFullscreen) await root.webkitRequestFullscreen();
+      }
+      if (screen.orientation && screen.orientation.lock) {
+        await screen.orientation.lock('landscape');
+        dismissRotateModal();
+        return;
+      }
+    } catch (err) {
+      // Algunos navegadores móviles (como iOS Safari) requieren giro físico del dispositivo
+    }
+    if (window.innerWidth > window.innerHeight) {
+      dismissRotateModal();
+    } else {
+      const hint = document.getElementById('rotateHint');
+      if (hint) hint.style.display = 'block';
+    }
+  }
+  window.addEventListener('resize', checkOrientationPrompt);
+  window.addEventListener('orientationchange', checkOrientationPrompt);
+
+  /* Gesto swipe horizontal en móviles para pasar viñetas */
+  let touchStartX = 0, touchStartY = 0;
+  document.getElementById('deck').addEventListener('touchstart', e => {
+    touchStartX = e.changedTouches[0].screenX;
+    touchStartY = e.changedTouches[0].screenY;
+  }, { passive: true });
+  document.getElementById('deck').addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].screenX - touchStartX;
+    const dy = e.changedTouches[0].screenY - touchStartY;
+    if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy)) {
+      lastSwipe = Date.now();
+      if (dx < 0) go(1); else go(-1);
+    }
+  }, { passive: true });
+
+  checkOrientationPrompt();
 
   show((parseInt(location.hash.slice(1)) || 1) - 1);
 </script>

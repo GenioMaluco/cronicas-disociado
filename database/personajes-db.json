@@ -1,0 +1,228 @@
+{
+  "meta": {
+    "project": "Universo Web Cómic — Genio Maluco",
+    "version": "1.0.0",
+    "updatedAt": "2026-11-06",
+    "purpose": "Base de datos maestra de personajes, estilo gráfico, esqueletos de pose y prompts modulares para ahorrar tokens y mantener consistencia visual absoluta entre episodios."
+  },
+  "artStyle": {
+    "name": "Maluco Pop-Comic Cel-Shaded",
+    "aspectRatio": "16:9",
+    "linework": "Contornos de tinta negra gruesa y limpia (bold black comic ink outlines), estilo cómic occidental moderno fusionado con expresividad anime.",
+    "coloring": "Cel-shading vibrante de alto contraste con sombras duras definidas y brillos cálidos.",
+    "uiTheme": {
+      "colors": {
+        "bgDark": "#0d0d12",
+        "ink": "#111111",
+        "paper": "#fff8e7",
+        "pop": "#ffcc00",
+        "hot": "#ff3b3b",
+        "cool": "#2ec4ff"
+      },
+      "fonts": {
+        "display": "Bangers",
+        "dialogue": "Comic Neue",
+        "terminal": "VT323"
+      },
+      "borders": "6px solid #111111 con sombra dura 10px 10px 0 #ffcc00"
+    },
+    "tokenSaverRule": "En vez de describir el estilo e indumentaria desde cero en cada viñeta, adjuntar SIEMPRE `img/genio-maluco/04-avatar-aislado.jpg` o `01-model-sheet.jpg` como imagen de referencia + el bloque `shortPromptEN` (solo ~45 tokens)."
+  },
+  "protagonist": {
+    "id": "genio-maluco",
+    "name": "Genio Maluco",
+    "role": "Protagonista Principal / Comediante Stand-Up / Oficinista Disociado",
+    "bio": {
+      "age": 37,
+      "heightCm": 168,
+      "heightLabel": "1.68 m",
+      "sport": "Básquetbol (le da fuerza física, espalda ancha, pecho firme y antebrazos potentes pese a la pancita)",
+      "catchphrase": "Y ese consejo les doy, porque Genio Maluco soy."
+    },
+    "physicalTraits": {
+      "build": "Gordito pero muy fuerte (complexión 'power-stocky' de basquetbolista: hombros anchos, brazos y antebrazos gruesos y fuertes con vello, torso robusto con pancita redonda de 37 años, estatura 1.68 m).",
+      "hair": "Cabello castaño oscuro abundante y ondulado, partido al medio con ondas voluminosas en la parte superior.",
+      "beard": "Barba completa gruesa, densa y tupida con bigote abundante (tono castaño oscuro con ligeros matices cobrizos/dorados en el bigote y mentón).",
+      "eyebrows": "Cejas gruesas, pobladas y muy expresivas (visibles por encima de los lentes en gestos de sorpresa o disociación).",
+      "glasses": "Lentes oscuros redondos con aro metálico delgado (estilo John Lennon / aviador redondo oscuro). Nunca se los quita, salvo que se deslicen por la nariz para mostrar ojos en espiral o lágrimas."
+    },
+    "signatureOutfit": {
+      "rule": "SIEMPRE usa exactamente la misma ropa en todos los web cómics.",
+      "shirt": "Camisa de oficina de botones color celeste hielo claro (#cfe4f5), cuello abierto en el botón superior, bolsillo en el pecho izquierdo y mangas arremangadas hasta los codos dejando ver antebrazos fuertes.",
+      "pants": "Pantalón de vestir corte recto color gris carbón / azul marino muy oscuro (#262f3d).",
+      "belt": "Cinturón de cuero café oscuro (#5c3a21) con hebilla metálica cuadrada.",
+      "paletteHex": {
+        "shirt": "#CFE4F5",
+        "pants": "#262F3D",
+        "belt": "#5C3A21",
+        "lanyard": "#1E56A0",
+        "beard": "#3B2618",
+        "sunglasses": "#1A1E24"
+      }
+    },
+    "gafeteRules": {
+      "item": "Gafete corporativo (porta-carnet vertical blanco/transparente con foto miniatura y cinta azul #1E56A0).",
+      "mandatory": "DEBE aparecer en TODO momento en una de las 4 posiciones canónicas:",
+      "positions": [
+        {
+          "code": "GAFETE_CUELLO",
+          "name": "En el cuello",
+          "description": "Colgado del cuello con la cinta azul cayendo sobre el pecho.",
+          "bestFor": "Caminando por la calle, oficina, ascensor, planos medios."
+        },
+        {
+          "code": "GAFETE_BOLSILLO",
+          "name": "En la camisa junto al bolsillo",
+          "description": "Enganchado con clip directamente al borde del bolsillo izquierdo de la camisa celeste.",
+          "bestFor": "Modo Selfie, primeros planos, stand-up con micrófono."
+        },
+        {
+          "code": "GAFETE_PANTALON",
+          "name": "Junto al pantalón / cinturón",
+          "description": "Enganchado a la pretina del pantalón o cinturón al costado de la cadera.",
+          "bestFor": "Sentado en el escritorio, corriendo, o cuando lleva objetos en el pecho."
+        },
+        {
+          "code": "GAFETE_BRAZO",
+          "name": "Pegado al brazo",
+          "description": "Sujeto con banda elástica/porta-gafete en el bíceps sobre la manga arremangada.",
+          "bestFor": "Poses de acción, jugando básquetbol, levantando peso o gesticulando fuerte."
+        }
+      ]
+    },
+    "referenceAssets": {
+      "modelSheet": "img/genio-maluco/01-model-sheet.jpg",
+      "skeletonsAndPoses": "img/genio-maluco/02-esqueletos-poses.jpg",
+      "selfieFrames": "img/genio-maluco/03-selfie-frames.jpg",
+      "isolatedAvatar": "img/genio-maluco/04-avatar-aislado.jpg"
+    },
+    "prompts": {
+      "shortPromptEN": "Genio Maluco (match reference image): 37yo, 1.68m stocky-strong basketball build (broad shoulders, muscular hairy forearms, chubby belly), wavy middle-parted brown hair, thick bushy full beard, round dark metal-frame sunglasses, light-blue rolled-sleeve office shirt, dark dress pants, blue corporate ID badge visible.",
+      "shortPromptES": "Genio Maluco (usar imagen de referencia): 37 años, 1.68m, gordito pero muy fuerte de básquetbol (hombros anchos, antebrazos musculosos, pancita), cabello castaño ondulado partido al medio, barba gruesa y tupida, lentes oscuros redondos, camisa celeste arremangada, pantalón oscuro y gafete corporativo visible.",
+      "selfiePromptEN": "POV Selfie angle of Genio Maluco (37yo stocky-strong build, wavy middle-parted brown hair, thick bushy beard, round dark sunglasses, light-blue office shirt with corporate ID badge clipped to chest pocket), vibrant cel-shaded webcomic style."
+    },
+    "skeletonPoses": [
+      {
+        "id": "POSE_01_DISOCIADO",
+        "name": "Caminata Disociada / Bochorno",
+        "skeleton": "Torso inclinado 15° adelante, hombros caídos pero anchos, mano derecha en la frente, rodillas semiflexionadas.",
+        "gafeteDefault": "GAFETE_CUELLO",
+        "useCase": "Caminando bajo el sol, agotamiento mental, saliendo de la oficina."
+      },
+      {
+        "id": "POSE_02_BASKET_POWER",
+        "name": "Fuerza Basquetbolista / Guardia Fuerte",
+        "skeleton": "Base ancha de piernas, centro de gravedad bajo (1.68m compacto), pecho inflado, antebrazos flexionados mostrando músculo o girando balón.",
+        "gafeteDefault": "GAFETE_BRAZO",
+        "useCase": "Demostrando fuerza física, esquivando obstáculos, referencias deportivas."
+      },
+      {
+        "id": "POSE_03_STANDUP",
+        "name": "Modo Stand-Up / Remate Maluco",
+        "skeleton": "Postura erguida apoyada en pierna trasera, mano derecha sosteniendo micrófono cerca de la barba, mano izquierda gesticulando abierta.",
+        "gafeteDefault": "GAFETE_BOLSILLO",
+        "useCase": "Portadas, cierres de episodio ('porque Genio Maluco soy'), monólogos."
+      },
+      {
+        "id": "POSE_04_OFICINA_TECLEO",
+        "name": "Poeta de Viernes / Escritorio",
+        "skeleton": "Sentado encorvado frente al monitor, espalda ancha ocupando toda la silla, manos tecleando a máxima velocidad.",
+        "gafeteDefault": "GAFETE_PANTALON",
+        "useCase": "Escenas de trabajo, programación, escribiendo guiones a las 4:50 p.m."
+      },
+      {
+        "id": "POSE_05_SHOCK_PANICO",
+        "name": "Juaaaazzz / Shock Cómico",
+        "skeleton": "Espalda arqueada hacia atrás en curva 'C', brazos levantados en guardia o sosteniendo lata/cigarro, lentes saltando ligeramente.",
+        "gafeteDefault": "GAFETE_CUELLO",
+        "useCase": "Apariciones de ovnis, gritos de señoras con chancleta, sustos de oficina."
+      },
+      {
+        "id": "POSE_06_RELAX_BIRRA",
+        "name": "Barra de Vida al 100%",
+        "skeleton": "Hombros relajados, cabeza ligeramente inclinada atrás disfrutando el momento, sosteniendo lata fría en mano derecha.",
+        "gafeteDefault": "GAFETE_BOLSILLO",
+        "useCase": "Momentos de alivio, pausa de almuerzo, victorias cotidianas."
+      }
+    ],
+    "selfieFrames": [
+      {
+        "id": "SELFIE_01_MALUCO_GRIN",
+        "name": "Sonrisa Maluca Clásica (Frontal)",
+        "angle": "Frontal a la altura de los ojos (lente 28mm smartphone)",
+        "expression": "Sonrisa pícara confiada entre la barba tupida, lentes oscuros redondos reflejando la luz."
+      },
+      {
+        "id": "SELFIE_02_AVENTURA_PICADO",
+        "angle": "Picado 30° con brazo extendido (estilo foto volcán)",
+        "name": "Selfie Picado Exterior",
+        "expression": "Sonrisa amplia mostrando dientes, cejas arriba, reflejo del paisaje en los lentes redondos."
+      },
+      {
+        "id": "SELFIE_03_PERFIL_34",
+        "name": "Perfil 3/4 Escéptico",
+        "angle": "Tres cuartos lateral (45°) mostrando volumen de barba y onda del cabello",
+        "expression": "Una ceja levantada por encima del aro redondo del lente, media sonrisa sarcástica."
+      },
+      {
+        "id": "SELFIE_04_BOCHORNO_ESPIRAL",
+        "name": "Selfie Disociado / Bochorno",
+        "angle": "Frontal cercano ligeramente inclinado",
+        "expression": "Lentes oscuros redondos bajados a la punta de la nariz revelando ojos en espiral, gotas de sudor."
+      },
+      {
+        "id": "SELFIE_05_GRITO_SHOCK",
+        "name": "Selfie Pánico / Red Flag",
+        "angle": "Contrapicado dramático de cerca",
+        "expression": "Boca abierta en grito cómico, barba erizada, lentes despegándose por el impacto."
+      },
+      {
+        "id": "SELFIE_06_LLANTO_VIERNES",
+        "name": "Selfie Viernes 4:50 p.m.",
+        "angle": "Frontal con manos en las mejillas",
+        "expression": "Cascadas de lágrimas estilo anime saliendo por detrás de los lentes oscuros redondos."
+      }
+    ]
+  },
+  "secondaryCharacters": [
+    {
+      "id": "casera-chancleta",
+      "name": "La Señora Casera de Kung Fu Sion (Abastecedor)",
+      "role": "Antagonista de Servicio al Cliente",
+      "episode": "Ep. 01 — Crónicas de un Disociado en San Pedro",
+      "referenceImage": "img/genio-maluco/ref-casera-kungfusion.png",
+      "modelSheet": "img/genio-maluco/05-yani-casera-sheet.jpg",
+      "visualPrompt": "Middle-aged grumpy landlady from Kung Fu Hustle (Kung Fu Sion), black hair in a hairnet packed with RED, YELLOW, and PINK/MAGENTA hollow plastic hair curlers/rollers, lit smoking cigarette hanging from mouth, wearing a WHITE lace-trimmed nightgown/house dress with sheer white shoulders and floral lace neckline, brandishing a brown flip-flop (chancleta) as a weapon, cel-shaded webcomic style."
+    },
+    {
+      "id": "yani-neko",
+      "name": "Yani Neko (Yaniko — Modo Aesthetic)",
+      "role": "Expectativa Disociada (https://yanineko.fandom.com/wiki/Yani_Neko)",
+      "episode": "Ep. 01 — Crónicas de un Disociado en San Pedro",
+      "referenceImage": "img/genio-maluco/ref-yani-neko.webp",
+      "modelSheet": "img/genio-maluco/05-yani-casera-sheet.jpg",
+      "visualPrompt": "Canonical Yani Neko (Yaniko) from Yani Neko anime/manga: messy medium-length pale minty-white / silver-white hair with matching cat ears (dark grey tips), half-lidded chill amber-brown eyes with distinct lower eyelashes, cool effortless 'aesthetic' laid-back vibe (not kawaii maid), wearing a loose oversized off-white/cream V-neck t-shirt with frayed collar, baggy slate-blue sweatpants, yellow clogs/crocs, and dark grey cat tail, cel-shaded webcomic style."
+    },
+    {
+      "id": "jefe-toxico",
+      "name": "El Jefe 'Somos Familia'",
+      "role": "Villano Corporativo de los Viernes 4:50 p.m.",
+      "episode": "Ep. 01 — Crónicas de un Disociado en San Pedro",
+      "visualPrompt": "Overly enthusiastic corporate boss in his 40s, slicked brown hair, huge fake manic smile, arms wide open, wearing a dark teal polo/t-shirt over collared shirt with 'CORPORATE COMPANY' logo, standing behind cheap office pizza boxes."
+    },
+    {
+      "id": "primo-del-jefe",
+      "name": "El Primo del Jefe (Amenaza Biológica)",
+      "role": "NPC del Ascensor",
+      "episode": "Ep. 01 — Crónicas de un Disociado en San Pedro",
+      "visualPrompt": "Smug chubby nepotism hire in an ill-fitting grey business suit and tie, hands clasped together in front of stomach, shameless smug grin inside an office elevator surrounded by green toxic gas clouds."
+    },
+    {
+      "id": "archivistas-rrhh",
+      "name": "Los de Bata Blanca (Archivistas / RRHH)",
+      "role": "Presuntos Colaboracionistas Alienígenas",
+      "episode": "Ep. 01 — Crónicas de un Disociado en San Pedro",
+      "visualPrompt": "Office/archive workers wearing white lab coats walking calmly on the plaza beneath the UFO-shaped concrete building (Archivo Nacional de Costa Rica), lit by eerie green light."
+    }
+  ]
+}
